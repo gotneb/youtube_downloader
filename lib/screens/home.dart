@@ -2,17 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:youtube_downloader/components/banner_video.dart';
 import 'package:youtube_downloader/styles/home.dart' as style;
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   static const String route = '/home';
-
-  static const _side = 60.0;
-
   @override
-  Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
+  _HomeState createState() => _HomeState();
+}
 
-    final textUrl = TextField(
-      style: const TextStyle(color: Colors.white),
+class _HomeState extends State<Home> {
+  final _controller = TextEditingController();
+  static const _side = 60.0;
+  bool firstTime = true;
+
+  var widgets = <Widget>[];
+
+  _HomeState() {
+    var search = makeFieldText();
+    widgets.addAll([
+      const Text('Youtube', style: style.Home.title),
+      const Text('Downloader', style: style.Home.title),
+      const SizedBox(height: 15),
+      search,
+      const SizedBox(height: 15),
+    ]);
+  }
+
+  Row makeFieldText() {
+    final field = TextField(
+      enableInteractiveSelection: true,
+      controller: _controller,
       decoration: InputDecoration(
         filled: true,
         fillColor: Colors.white,
@@ -22,6 +39,7 @@ class Home extends StatelessWidget {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(25),
         ),
+        focusColor: Colors.black,
       ),
     );
 
@@ -33,37 +51,46 @@ class Home extends StatelessWidget {
         color: style.Home.searchBackground,
       ),
       child: IconButton(
-        onPressed: () {},
+        onPressed: loadBanner,
         icon: const Icon(Icons.search, size: 35, color: style.Home.searchColor),
       ),
     );
 
-    final searchSection = Row(
+    return Row(
       children: [
-        Expanded(child: textUrl),
+        Expanded(child: field),
         const SizedBox(width: 8),
         searchButton,
       ],
     );
+  }
 
+  void loadBanner() {
+    setState(() {
+      if (firstTime) {
+        widgets.add(BannerVideo(url: _controller.text));
+        firstTime = !firstTime;
+      } else {
+        widgets.removeLast();
+        widgets.add(BannerVideo(url: _controller.text));
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final body = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text('Youtube', style: style.Home.title),
-        const Text('Downloader', style: style.Home.title),
-        const SizedBox(height: 15),
-        searchSection,
-        const SizedBox(height: 20),
-        BannerVideo(),
-        //Center(child: Image.asset('assets/galaxy.png', width: width / 1.3)),
-      ],
+      children: widgets,
     );
 
     return Scaffold(
       backgroundColor: const Color.fromRGBO(25, 48, 92, 1),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(8, 30, 8, 0),
-        child: body,
+        child: ListView(
+          children: [body],
+        ),
       ),
     );
   }
