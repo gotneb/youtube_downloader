@@ -6,20 +6,24 @@ class ProgressVideo extends StatelessWidget {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
 
-    var title = SizedBox(
-      width: width - 60,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text('Something.mp4', style: style.ProgressVideo.title),
-          Icon(Icons.close_rounded),
-        ],
-      ),
+    final about = Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text('Something.mp4', style: style.ProgressVideo.title),
+        Icon(Icons.close_rounded),
+      ],
     );
 
-    var progress = SizedBox(
-      width: width - 60,
-      child: LinearProgressIndicator(color: Colors.blueAccent, backgroundColor: Colors.grey[350]),
+    final progress = LinearProgressIndicator(
+      color: Colors.blueAccent,
+      backgroundColor: Colors.grey[350],
+    );
+
+    final information = Flexible(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [about, progress],
+      ),
     );
 
     return Container(
@@ -31,15 +35,13 @@ class ProgressVideo extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(Icons.insert_drive_file, color: Colors.purple, size: 45),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              title,
-              progress,
-            ],
+          Icon(
+            Icons.insert_drive_file,
+            size: 45,
+            color: Colors.purple,
           ),
+          information,
+          SizedBox(width: 10),
         ],
       ),
     );
