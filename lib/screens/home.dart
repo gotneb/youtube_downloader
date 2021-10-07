@@ -22,7 +22,7 @@ class _HomeState extends State<Home> {
       const Text('Downloader', style: style.Home.title),
       const SizedBox(height: 15),
       search,
-      const SizedBox(height: 15),
+      const SizedBox(height: 45),
     ]);
   }
 
