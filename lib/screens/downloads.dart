@@ -6,15 +6,14 @@ import 'package:youtube_downloader/models/videos_for_download.dart';
 import 'package:youtube_downloader/styles/downloads.dart' as style;
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
-class Downloading extends StatefulWidget {
+class Downloads extends StatefulWidget {
   static const double _radius = 35;
 
   @override
   _DownloadingState createState() => _DownloadingState();
 }
 
-class _DownloadingState extends State<Downloading> {
-
+class _DownloadingState extends State<Downloads> {
   void removeFromStackDownloads(Video video) {
     setState(() {
       var videos = VideosForDownload.fetchVideos;
@@ -63,8 +62,8 @@ class _DownloadingState extends State<Downloading> {
       decoration: BoxDecoration(
         color: Colors.grey[200],
         borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(Downloading._radius),
-          topRight: Radius.circular(Downloading._radius),
+          topLeft: Radius.circular(Downloads._radius),
+          topRight: Radius.circular(Downloads._radius),
         ),
       ),
       child: ListView.separated(

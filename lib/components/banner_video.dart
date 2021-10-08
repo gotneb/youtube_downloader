@@ -113,7 +113,7 @@ class BannerVideo extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(25),
                 image: DecorationImage(
-                  image: NetworkImage(video.thumbnails.standardResUrl),
+                  image: NetworkImage(video.thumbnails.highResUrl),
                   fit: BoxFit.cover,
                 ),
               ),
