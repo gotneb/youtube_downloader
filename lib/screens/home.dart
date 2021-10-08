@@ -43,7 +43,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(25, 48, 92, 1),
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(8, 30, 8, 0),
+        padding: const EdgeInsets.fromLTRB(12, 30, 12, 0),
         child: ListView(
           children: [body],
         ),
