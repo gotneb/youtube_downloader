@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:youtube_downloader/screens/downloads.dart';
 
 import 'screens/home.dart';
-import 'screens/settings.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,13 +14,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Flutter Demo',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: const NavigationBar(),
-        );
+      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const NavigationBar(),
+    );
   }
 }
 
@@ -64,8 +63,8 @@ class _NavigationBarState extends State<NavigationBar> {
         ],
         currentIndex: _selectedIndex,
         backgroundColor: const Color.fromRGBO(41, 39, 56, 1),
-        selectedItemColor: const Color.fromRGBO(78, 59, 247, 1),
-        unselectedItemColor: Colors.white,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: const Color.fromRGBO(78, 59, 247, 1),
         onTap: _onItemTapped,
       ),
     );

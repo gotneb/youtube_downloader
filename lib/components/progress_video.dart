@@ -1,16 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:youtube_downloader/styles/progress_video.dart' as style;
+import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class ProgressVideo extends StatelessWidget {
+  final VoidCallback onClickedClose;
+
+  final Video video;
+
+  ProgressVideo({
+    required this.video,
+    required this.onClickedClose,
+  });
+
+  @override
+  bool operator ==(Object other) {
+    if (other is ProgressVideo) {
+      return other.video.title == video.title;
+    }
+
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
 
     final about = Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text('Something.mp4', style: style.ProgressVideo.title),
-        Icon(Icons.close_rounded),
+        ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 0.7 * width),
+          child: Text(
+            video.title,
+            style: style.ProgressVideo.title,
+            maxLines: 1,
+          ),
+        ),
+        Flexible(
+          child: IconButton(
+            icon: const Icon(Icons.close_rounded),
+            onPressed: onClickedClose,
+          ),
+        ),
       ],
     );
 
@@ -21,27 +53,28 @@ class ProgressVideo extends StatelessWidget {
 
     final information = Flexible(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [about, progress],
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [about, progress, const SizedBox(height: 10)],
       ),
     );
 
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: 60,
+      height: 65,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
-        children: [
-          Icon(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          const Icon(
             Icons.insert_drive_file,
-            size: 45,
+            size: 50,
             color: Colors.purple,
           ),
           information,
-          SizedBox(width: 10),
+          const SizedBox(width: 15),
         ],
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:youtube_downloader/models/videos_for_download.dart';
 import 'package:youtube_downloader/styles/banner_video.dart' as style;
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
@@ -18,6 +19,17 @@ class BannerVideo extends StatelessWidget {
       final seconds = time.inSeconds - hours * 3600 - minutes * 60;
       return '$hours:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
     }
+  }
+
+  void addToDownloads(BuildContext context, Video video) {
+    VideosForDownload.add(video);
+
+    const snackBar = SnackBar(
+      content: Text('Realizando o download...', textAlign: TextAlign.center),
+      duration: Duration(milliseconds: 800),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override
@@ -49,7 +61,9 @@ class BannerVideo extends StatelessWidget {
               ),
               child: IconButton(
                 color: style.BannerVideo.colorIconDownload,
-                onPressed: () {},
+                onPressed: () {
+                  addToDownloads(context, video);
+                },
                 icon: const Icon(Icons.download),
               ),
             );
