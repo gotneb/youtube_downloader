@@ -41,7 +41,24 @@ class BannerVideo extends StatelessWidget {
     return FutureBuilder(
         future: yt.videos.get(url),
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            var body = Column(
+              children: <Widget>[
+                SizedBox(
+                  width: width / 2,
+                  height: width / 2,
+                  child: CircularProgressIndicator(
+                    strokeWidth: width / 30,
+                    backgroundColor: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                const Text('Aguarde um momento...',
+                    style: style.BannerVideo.searching),
+              ],
+            );
+            return Center(child: body);
+          } else if (snapshot.hasData) {
             var video = snapshot.data as Video;
 
             final timeBox = Container(
@@ -125,7 +142,7 @@ class BannerVideo extends StatelessWidget {
                 ],
               ),
             );
-          } else if (snapshot.hasError) {
+          } else {
             final body = Column(
               children: [
                 Image.asset('assets/meteor.png', width: width / 1.7),
@@ -138,23 +155,6 @@ class BannerVideo extends StatelessWidget {
               ],
             );
 
-            return Center(child: body);
-          } else {
-            var body = Column(
-              children: <Widget>[
-                SizedBox(
-                  width: width / 2,
-                  height: width / 2,
-                  child: CircularProgressIndicator(
-                    strokeWidth: width / 30,
-                    backgroundColor: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                const Text('Aguarde um momento...',
-                    style: style.BannerVideo.searching),
-              ],
-            );
             return Center(child: body);
           }
         });
