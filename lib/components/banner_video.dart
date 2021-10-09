@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:youtube_downloader/models/videos_for_download.dart';
+import 'package:youtube_downloader/screens/downloads.dart';
 import 'package:youtube_downloader/styles/banner_video.dart' as style;
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
@@ -22,7 +22,7 @@ class BannerVideo extends StatelessWidget {
   }
 
   void addToDownloads(BuildContext context, Video video) {
-    VideosForDownload.add(video);
+    Downloads.add(video);
 
     const snackBar = SnackBar(
       content: Text('Realizando o download...', textAlign: TextAlign.center),
@@ -109,7 +109,7 @@ class BannerVideo extends StatelessWidget {
 
             return Container(
               width: 480,
-              height: 220,
+              height: 218,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(25),
                 image: DecorationImage(

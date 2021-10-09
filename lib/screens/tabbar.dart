@@ -17,12 +17,6 @@ class _TabbarState extends State<Tabbar> {
   void _onItemTapped(int index) {
     setState(() {
       _currentIndex = index;
-
-      // Refresh screen Downloads, because IndexedStack not refresh it
-      if (index == 1) {
-        widget.screens.removeAt(index);
-        widget.screens.insert(index, Downloads());
-      }
     });
   }
 

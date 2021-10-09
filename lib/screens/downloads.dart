@@ -8,22 +8,38 @@ import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class Downloads extends StatefulWidget {
   static const double _radius = 35;
+  static final _progress = <ProgressVideo>[];
+
+  static List<ProgressVideo> fetchProgress() => _progress;
+  static void add(Video video) {
+    _progress.add(ProgressVideo(
+      video: video,
+      onClickedClose: () => removeFromStackDownloads(video),
+    ));
+    notifyDataChanged();
+  }
+
+  static VoidCallback notifyDataChanged = () {};
+
+  static void removeFromStackDownloads(Video download) {
+    for (var i = 0; i < _progress.length; i++) {
+      if (_progress[i].video == download) {
+        _progress.removeAt(i);
+        break;
+      }
+    }
+    notifyDataChanged();
+  }
 
   @override
   _DownloadingState createState() => _DownloadingState();
 }
 
 class _DownloadingState extends State<Downloads> {
-  void removeFromStackDownloads(Video video) {
-    setState(() {
-      var videos = VideosForDownload.fetchVideos;
-      for (var i = 0; i < videos.length; i++) {
-        if (videos[i] == video) {
-          videos.removeAt(i);
-          break;
-        }
-      }
-    });
+  _DownloadingState() {
+    Downloads.notifyDataChanged = () {
+      setState(() {});
+    };
   }
 
   @override
@@ -67,14 +83,9 @@ class _DownloadingState extends State<Downloads> {
         ),
       ),
       child: ListView.separated(
-        itemCount: VideosForDownload.fetchVideos.length,
+        itemCount: Downloads.fetchProgress().length,
         separatorBuilder: (_, i) => const SizedBox(height: 15),
-        itemBuilder: (_, i) => ProgressVideo(
-          video: VideosForDownload.fetchVideos[i],
-          onClickedClose: () {
-            removeFromStackDownloads(VideosForDownload.fetchVideos[i]);
-          },
-        ),
+        itemBuilder: (_, i) => Downloads.fetchProgress()[i],
       ),
     );
 
