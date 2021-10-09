@@ -1,8 +1,5 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:youtube_downloader/components/progress_video.dart';
-import 'package:youtube_downloader/models/videos_for_download.dart';
 import 'package:youtube_downloader/styles/downloads.dart' as style;
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 

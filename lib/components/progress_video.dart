@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:youtube_downloader/styles/progress_video.dart' as style;
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 
 class ProgressVideo extends StatefulWidget {
   static const double _side = 50;
@@ -8,10 +11,11 @@ class ProgressVideo extends StatefulWidget {
 
   final Video video;
 
-  ProgressVideo({
+  const ProgressVideo({
     required this.video,
     required this.onClickedClose,
-  });
+    Key? key,
+  }) : super(key: key);
 
   @override
   _ProgressVideoState createState() => _ProgressVideoState();
@@ -19,16 +23,50 @@ class ProgressVideo extends StatefulWidget {
 
 class _ProgressVideoState extends State<ProgressVideo> {
   bool _isFinished = false;
+  int _id = 10;
 
   _ProgressVideoState() {
-    startDownload();
+    _startDownload();
   }
 
-  void startDownload() {
-    // Only simulating
-    Future.delayed(const Duration(seconds: 2)).whenComplete(() {
-      setState(() {
-        _isFinished = true;
+  void _startDownload() async {
+    Future.delayed(const Duration(seconds: 3)).whenComplete(
+      () {
+        _notifyDownloadDone();
+      }
+    );
+    /*
+    var yt = YoutubeExplode();
+    var manifest = await yt.videos.streamsClient.getManifest(widget.video.id);
+    var streamInfo = manifest.muxed.withHighestBitrate();
+
+    var stream = yt.videos.streamsClient.get(streamInfo);
+    var downloadPath = '/storage/emulated/0/Download';
+
+    var file = File('$downloadPath/${widget.video.title}.mp4');
+    var fileStream = file.openWrite();
+
+    await stream.pipe(fileStream);
+
+    await fileStream.flush();
+    await fileStream.close();
+    */
+  }
+
+  void _notifyDownloadDone() {
+    setState(() {
+      _isFinished = true;
+      AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+        if (isAllowed) {
+          AwesomeNotifications().createNotification(
+            content: NotificationContent(
+              id: _id++,
+              channelKey: 'basic_channel',
+              title: widget.video.title,
+              body: 'Download concluído',
+            ),
+          );
+        }
       });
     });
   }
