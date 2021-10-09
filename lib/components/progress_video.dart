@@ -25,17 +25,19 @@ class _ProgressVideoState extends State<ProgressVideo> {
   bool _isFinished = false;
   int _id = 10;
 
-  _ProgressVideoState() {
+  @override
+  void initState() {
+    super.initState();
     _startDownload();
   }
 
   void _startDownload() async {
-    Future.delayed(const Duration(seconds: 3)).whenComplete(
-      () {
-        _notifyDownloadDone();
-      }
-    );
     /*
+    // Only for tests
+    Future.delayed(const Duration(seconds: 3)).whenComplete(() {
+      _notifyDownloadDone();
+    });
+    */
     var yt = YoutubeExplode();
     var manifest = await yt.videos.streamsClient.getManifest(widget.video.id);
     var streamInfo = manifest.muxed.withHighestBitrate();
@@ -50,7 +52,8 @@ class _ProgressVideoState extends State<ProgressVideo> {
 
     await fileStream.flush();
     await fileStream.close();
-    */
+
+    _notifyDownloadDone();
   }
 
   void _notifyDownloadDone() {
