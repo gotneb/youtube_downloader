@@ -1,10 +1,13 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:youtube_downloader/components/information/welcome.dart';
 import 'package:youtube_downloader/components/banner_video.dart';
 import 'package:youtube_downloader/components/search_video.dart';
 import 'package:youtube_downloader/styles/home.dart' as style;
 
 class Home extends StatefulWidget {
+  const Home({Key? key}) : super(key: key);
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -22,6 +25,7 @@ class _HomeState extends State<Home> {
       const SizedBox(height: 15),
       search,
       const SizedBox(height: 45),
+      const Welcome(),
     ]);
   }
 
