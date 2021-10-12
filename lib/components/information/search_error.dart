@@ -17,7 +17,7 @@ class SearchError extends StatelessWidget {
         Image.asset('assets/meteor.png', width: width / 1.7),
         const SizedBox(height: 25),
         const Text(
-          'Vídeo não encontrado.\nTem tem certeza que digitou certo?',
+          'Vídeo não encontrado :(\nTem tem certeza que digitou certo?',
           textAlign: TextAlign.center,
           style: _style,
         ),

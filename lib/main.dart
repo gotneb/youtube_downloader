@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Tabbar(screens: <Widget>[
+      home: const Tabbar(screens: <Widget>[
         Home(),
         Downloads(),
       ]),

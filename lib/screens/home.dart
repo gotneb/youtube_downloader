@@ -41,27 +41,27 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     final dialog = AlertDialog(
-      title: Text('Enviar notificações?'),
+      title: const Text('Enviar notificações?'),
       content: Row(
-        children: <Widget>[
-          const Icon(Icons.notification_add, size: 50),
-          const SizedBox(width: 15),
+        children: const <Widget>[
+          Icon(Icons.notification_add, size: 50),
+          SizedBox(width: 15),
           Flexible(
-            child: const Text(
+            child: Text(
               'Concorda que podemos enviar notificações quando um download terminar?',
               softWrap: true,
             ),
           ),
         ],
       ),
-      actions: [
+      actions: <Widget>[
         TextButton(
-            child: Text('NÃO'),
+            child: const Text('NÃO'),
             onPressed: () {
               Navigator.pop(context);
             }),
         TextButton(
-            child: Text('SIM'),
+            child: const Text('SIM'),
             onPressed: () {
               Navigator.pop(context);
               AwesomeNotifications().requestPermissionToSendNotifications();
@@ -84,7 +84,7 @@ class _HomeState extends State<Home> {
     );
 
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(25, 48, 92, 1),
+      backgroundColor: const Color.fromRGBO(21, 25, 53, 1),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(12, 30, 12, 0),
         child: ListView(

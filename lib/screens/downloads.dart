@@ -7,6 +7,8 @@ class Downloads extends StatefulWidget {
   static const double _radius = 35;
   static final _progress = <ProgressVideo>[];
 
+  const Downloads({Key? key}) : super(key: key);
+
   static List<ProgressVideo> fetchProgress() => _progress;
   static void add(Video video) {
     _progress.add(ProgressVideo(
@@ -45,6 +47,7 @@ class _DownloadingState extends State<Downloads> {
     final height = MediaQuery.of(context).size.height;
 
     final aboutPage = Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: const <Widget>[
         Icon(Icons.download_for_offline_rounded, size: 40, color: Colors.white),
         SizedBox(width: 20),
@@ -54,27 +57,30 @@ class _DownloadingState extends State<Downloads> {
 
     final topSection = Container(
       width: width,
-      height: 0.22 * height,
+      height: 0.25 * height,
       padding: const EdgeInsets.all(16),
       decoration: const BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.bottomLeft,
-          end: Alignment.topCenter,
+          end: Alignment.topRight,
           colors: [
-            Color.fromRGBO(49, 77, 201, 1),
-            Color.fromRGBO(23, 42, 125, 1),
+            Color.fromRGBO(199, 77, 247, 1),
+            Color.fromRGBO(78, 67, 232, 1),
           ],
         ),
       ),
-      child: aboutPage,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 24.0),
+        child: aboutPage,
+      ),
     );
 
     final listSection = Container(
       height: 0.75 * height,
       padding: const EdgeInsets.symmetric(horizontal: 10),
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: const BorderRadius.only(
+      decoration: const BoxDecoration(
+        color: Color.fromRGBO(23, 28, 55, 1),
+        borderRadius: BorderRadius.only(
           topLeft: Radius.circular(Downloads._radius),
           topRight: Radius.circular(Downloads._radius),
         ),

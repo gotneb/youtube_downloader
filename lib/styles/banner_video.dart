@@ -32,16 +32,6 @@ class BannerVideo {
     end: Alignment.topRight,
   );
 
-  static const searching = TextStyle(
-    color: Colors.white,
-    fontSize: 19,
-  );
-
-  static const badAnswer = TextStyle(
-    color: Colors.white,
-    fontSize: 18,
-  );
-
   static const colorIconDownload = Colors.white;
 
   static const backgroundIconDownload = Color.fromRGBO(164, 57, 230, 1);

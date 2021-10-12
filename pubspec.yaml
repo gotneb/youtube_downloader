@@ -38,6 +38,7 @@ dependencies:
   overlay_support: ^1.2.1
   permission_handler: ^8.2.2
   awesome_notifications: ^0.0.6+10
+  async: ^2.8.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

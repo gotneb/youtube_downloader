@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'downloads.dart';
 
 class Tabbar extends StatefulWidget {
   final List<Widget> screens;
 
-  const Tabbar({required this.screens});
+  const Tabbar({required this.screens, Key? key}) : super(key: key);
 
   @override
   _TabbarState createState() => _TabbarState();
@@ -39,9 +38,9 @@ class _TabbarState extends State<Tabbar> {
           ),
         ],
         currentIndex: _currentIndex,
-        backgroundColor: const Color.fromRGBO(41, 39, 56, 1),
-        selectedItemColor: Colors.white,
-        unselectedItemColor: const Color.fromRGBO(78, 59, 247, 1),
+        backgroundColor: Colors.white,
+        selectedItemColor: const Color.fromRGBO(41, 50, 85, 1),
+        unselectedItemColor: Colors.grey,
         onTap: _onItemTapped,
       ),
     );

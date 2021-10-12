@@ -31,7 +31,7 @@ class _ProgressVideoState extends State<ProgressVideo> {
     _startDownload();
   }
 
-  void _startDownload() async {
+  Future<void> _startDownload() async {
     /*
     // Only for tests
     Future.delayed(const Duration(seconds: 3)).whenComplete(() {
@@ -43,7 +43,7 @@ class _ProgressVideoState extends State<ProgressVideo> {
     var streamInfo = manifest.muxed.withHighestBitrate();
 
     var stream = yt.videos.streamsClient.get(streamInfo);
-    var downloadPath = '/storage/emulated/0/Download';
+    const downloadPath = '/storage/emulated/0/Download';
 
     var file = File('$downloadPath/${widget.video.title}.mp4');
     var fileStream = file.openWrite();
@@ -52,7 +52,6 @@ class _ProgressVideoState extends State<ProgressVideo> {
 
     await fileStream.flush();
     await fileStream.close();
-
     _notifyDownloadDone();
   }
 
@@ -90,22 +89,26 @@ class _ProgressVideoState extends State<ProgressVideo> {
       children: [
         Flexible(
           child: Text(
-            widget.video.title,
+            widget.video.title.trim(),
             style: style.ProgressVideo.title,
             maxLines: 1,
           ),
         ),
-        IconButton(
-          alignment: Alignment.centerRight,
-          icon: const Icon(Icons.close_rounded),
-          onPressed: widget.onClickedClose,
+        Opacity(
+          opacity: _isFinished ? 1 : 0,
+          child: IconButton(
+            alignment: Alignment.centerRight,
+            icon: const Icon(Icons.close_rounded,
+                color: style.ProgressVideo.cancelColor),
+            onPressed: _isFinished ? widget.onClickedClose : null,
+          ),
         ),
       ],
     );
 
     final progress = LinearProgressIndicator(
       minHeight: 5,
-      color: Colors.blueAccent,
+      color: Colors.blueAccent[700],
       backgroundColor: Colors.grey[350],
       value: _isFinished ? 100 : null,
     );
@@ -121,12 +124,12 @@ class _ProgressVideoState extends State<ProgressVideo> {
       width: ProgressVideo._side,
       height: ProgressVideo._side,
       decoration: BoxDecoration(
-        color: Colors.purple,
+        color: style.ProgressVideo.iconBackground,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Icon(
         _isFinished ? Icons.file_download_done_outlined : Icons.videocam,
-        color: Colors.white,
+        color: style.ProgressVideo.iconColor,
         size: ProgressVideo._side - 10,
       ),
     );
@@ -136,7 +139,7 @@ class _ProgressVideoState extends State<ProgressVideo> {
       padding: const EdgeInsets.symmetric(horizontal: 10),
       height: 65,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: style.ProgressVideo.background,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
