@@ -39,45 +39,48 @@ class _HomeState extends State<Home> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final dialog = AlertDialog(
-      title: const Text('Enviar notificações?'),
-      content: Row(
-        children: const <Widget>[
-          Icon(Icons.notification_add, size: 50),
-          SizedBox(width: 15),
-          Flexible(
-            child: Text(
-              'Concorda que podemos enviar notificações quando um download terminar?',
-              softWrap: true,
-            ),
-          ),
-        ],
-      ),
-      actions: <Widget>[
-        TextButton(
-            child: const Text('NÃO'),
-            onPressed: () {
-              Navigator.pop(context);
-            }),
-        TextButton(
-            child: const Text('SIM'),
-            onPressed: () {
-              Navigator.pop(context);
-              AwesomeNotifications().requestPermissionToSendNotifications();
-            }),
-      ],
-    );
-
+  void initState() {
+    super.initState();
     AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
       if (!isAllowed) {
         showDialog(
           context: context,
-          builder: (_) => dialog,
+          builder: (_) => AlertDialog(
+            title: const Text('Enviar notificações?'),
+            content: Row(
+              children: const <Widget>[
+                Icon(Icons.notification_add, size: 50),
+                SizedBox(width: 15),
+                Flexible(
+                  child: Text(
+                    'Concorda que podemos enviar notificações quando um download terminar?',
+                    softWrap: true,
+                  ),
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              TextButton(
+                  child: const Text('NÃO'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  }),
+              TextButton(
+                  child: const Text('SIM'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    AwesomeNotifications()
+                        .requestPermissionToSendNotifications();
+                  }),
+            ],
+          ),
         );
       }
     });
+  }
 
+  @override
+  Widget build(BuildContext context) {
     final body = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: widgets,

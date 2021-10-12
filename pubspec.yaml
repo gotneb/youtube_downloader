@@ -39,6 +39,13 @@ dependencies:
   permission_handler: ^8.2.2
   awesome_notifications: ^0.0.6+10
   async: ^2.8.1
+  flutter_launcher_icons: ^0.9.2
+
+flutter_icons:
+  image_path: "assets/icon/icon.png"
+  android: true
+  ios: false
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

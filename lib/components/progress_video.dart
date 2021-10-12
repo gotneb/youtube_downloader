@@ -23,12 +23,32 @@ class ProgressVideo extends StatefulWidget {
 
 class _ProgressVideoState extends State<ProgressVideo> {
   bool _isFinished = false;
+  bool _isThereError = false;
   int _id = 10;
 
   @override
   void initState() {
     super.initState();
     _startDownload();
+  }
+
+  void _notifyDownloadError() {
+    setState(() {
+      _isThereError = true;
+      _isFinished = true;
+      AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+        if (isAllowed) {
+          AwesomeNotifications().createNotification(
+            content: NotificationContent(
+              id: _id++,
+              channelKey: 'basic_channel',
+              title: widget.video.title,
+              body: 'Sentimos muito :( Não foi possíve realizar o download.',
+            ),
+          );
+        }
+      });
+    });
   }
 
   Future<void> _startDownload() async {
@@ -39,20 +59,27 @@ class _ProgressVideoState extends State<ProgressVideo> {
     });
     */
     var yt = YoutubeExplode();
-    var manifest = await yt.videos.streamsClient.getManifest(widget.video.id);
-    var streamInfo = manifest.muxed.withHighestBitrate();
+    try {
+      var manifest = await yt.videos.streamsClient.getManifest(widget.video.id);
 
-    var stream = yt.videos.streamsClient.get(streamInfo);
-    const downloadPath = '/storage/emulated/0/Download';
+      var streamInfo = manifest.muxed.withHighestBitrate();
 
-    var file = File('$downloadPath/${widget.video.title}.mp4');
-    var fileStream = file.openWrite();
+      var stream = yt.videos.streamsClient.get(streamInfo);
+      const downloadPath = '/storage/emulated/0/Download';
 
-    await stream.pipe(fileStream);
+      var file = File('$downloadPath/${widget.video.title}.mp4');
+      var fileStream = file.openWrite();
 
-    await fileStream.flush();
-    await fileStream.close();
-    _notifyDownloadDone();
+      await stream.pipe(fileStream);
+
+      await fileStream.flush();
+      await fileStream.close();
+      _notifyDownloadDone();
+    } catch (e) {
+      _notifyDownloadError();
+    } finally {
+      yt.close();
+    }
   }
 
   void _notifyDownloadDone() {
@@ -110,7 +137,7 @@ class _ProgressVideoState extends State<ProgressVideo> {
       minHeight: 5,
       color: Colors.blueAccent[700],
       backgroundColor: Colors.grey[350],
-      value: _isFinished ? 100 : null,
+      value: _isFinished || _isThereError ? 100 : null,
     );
 
     final information = Flexible(
@@ -128,7 +155,7 @@ class _ProgressVideoState extends State<ProgressVideo> {
         borderRadius: BorderRadius.circular(10),
       ),
       child: Icon(
-        _isFinished ? Icons.file_download_done_outlined : Icons.videocam,
+        _getIcon(),
         color: style.ProgressVideo.iconColor,
         size: ProgressVideo._side - 10,
       ),
@@ -151,5 +178,15 @@ class _ProgressVideoState extends State<ProgressVideo> {
         ],
       ),
     );
+  }
+
+  IconData _getIcon() {
+    if (_isThereError) {
+      return Icons.report_problem;
+    } else if (_isFinished) {
+      return Icons.file_download_done_outlined;
+    } else {
+      return Icons.videocam;
+    }
   }
 }

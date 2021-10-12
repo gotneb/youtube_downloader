@@ -57,7 +57,7 @@ class _DownloadingState extends State<Downloads> {
 
     final topSection = Container(
       width: width,
-      height: 0.25 * height,
+      height: 0.28 * height,
       padding: const EdgeInsets.all(16),
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -76,7 +76,7 @@ class _DownloadingState extends State<Downloads> {
     );
 
     final listSection = Container(
-      height: 0.75 * height,
+      height: 0.72 * height,
       padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: const BoxDecoration(
         color: Color.fromRGBO(23, 28, 55, 1),

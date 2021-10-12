@@ -8,7 +8,7 @@ import 'screens/tabbar.dart';
 void main() async {
   AwesomeNotifications().initialize(
       // set the icon to null if you want to use the default app icon
-      null,
+      'resource://drawable/res_app_icon',
       [
         NotificationChannel(
             channelKey: 'basic_channel',
@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Rost YoutubeDownloader',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
