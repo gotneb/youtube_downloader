@@ -25,6 +25,9 @@ class _ProgressVideoState extends State<ProgressVideo> {
   bool _isFinished = false;
   bool _isThereError = false;
   int _id = 10;
+  var _total = const FileSize(0);
+  var _received = 0;
+  double _percent = 0;
 
   @override
   void initState() {
@@ -61,7 +64,7 @@ class _ProgressVideoState extends State<ProgressVideo> {
     var yt = YoutubeExplode();
     try {
       var manifest = await yt.videos.streamsClient.getManifest(widget.video.id);
-
+      _total = manifest.muxed.withHighestBitrate().size;
       var streamInfo = manifest.muxed.withHighestBitrate();
 
       var stream = yt.videos.streamsClient.get(streamInfo);
@@ -70,7 +73,7 @@ class _ProgressVideoState extends State<ProgressVideo> {
       var file = File('$downloadPath/${widget.video.title}.mp4');
       var fileStream = file.openWrite();
 
-      await stream.pipe(fileStream);
+      await stream.map(_showDownloadProgress).pipe(fileStream);
 
       await fileStream.flush();
       await fileStream.close();
@@ -111,24 +114,37 @@ class _ProgressVideoState extends State<ProgressVideo> {
 
   @override
   Widget build(BuildContext context) {
-    final about = Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Flexible(
-          child: Text(
-            widget.video.title.trim(),
-            style: style.ProgressVideo.title,
-            maxLines: 1,
+    final about = SizedBox(
+      height: 25,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Flexible(
+            child: Text(
+              widget.video.title.trim(),
+              style: style.ProgressVideo.title,
+              maxLines: 1,
+              softWrap: true,
+            ),
           ),
-        ),
-        Opacity(
-          opacity: _isFinished ? 1 : 0,
-          child: IconButton(
-            alignment: Alignment.centerRight,
-            icon: const Icon(Icons.close_rounded,
-                color: style.ProgressVideo.cancelColor),
-            onPressed: _isFinished ? widget.onClickedClose : null,
+          Opacity(
+            opacity: 0,
+            child: IconButton(
+              alignment: Alignment.centerRight,
+              icon: const Icon(Icons.close_rounded,
+                  color: style.ProgressVideo.cancelColor),
+              onPressed: _isFinished ? widget.onClickedClose : null,
+            ),
           ),
+        ],
+      ),
+    );
+
+    final sizeInfo = Row(
+      children: <Widget>[
+        Text(
+          '${FileSize(_received)} / $_total',
+          style: style.ProgressVideo.size,
         ),
       ],
     );
@@ -137,13 +153,18 @@ class _ProgressVideoState extends State<ProgressVideo> {
       minHeight: 5,
       color: Colors.blueAccent[700],
       backgroundColor: Colors.grey[350],
-      value: _isFinished || _isThereError ? 100 : null,
+      value: _percent,
     );
 
-    final information = Flexible(
+    final information = Expanded(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [about, progress, const SizedBox(height: 10)],
+        children: [
+          about,
+          sizeInfo,
+          const SizedBox(height: 8),
+          progress,
+        ],
       ),
     );
 
@@ -164,13 +185,12 @@ class _ProgressVideoState extends State<ProgressVideo> {
     return Container(
       width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.symmetric(horizontal: 10),
-      height: 65,
+      height: 75,
       decoration: BoxDecoration(
         color: style.ProgressVideo.background,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           icon,
           const SizedBox(width: 10),
@@ -178,6 +198,14 @@ class _ProgressVideoState extends State<ProgressVideo> {
         ],
       ),
     );
+  }
+
+  List<int> _showDownloadProgress(List<int> data) {
+    setState(() {
+      _received += data.length;
+      _percent = (_received / _total.totalBytes);
+    });
+    return data;
   }
 
   IconData _getIcon() {

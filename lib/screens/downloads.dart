@@ -77,7 +77,7 @@ class _DownloadingState extends State<Downloads> {
 
     final listSection = Container(
       height: 0.72 * height,
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
       decoration: const BoxDecoration(
         color: Color.fromRGBO(23, 28, 55, 1),
         borderRadius: BorderRadius.only(
@@ -92,7 +92,7 @@ class _DownloadingState extends State<Downloads> {
       ),
     );
 
-    final body = Container(
+    final body = SizedBox(
       width: width,
       height: height,
       child: Stack(

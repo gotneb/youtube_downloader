@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 
@@ -15,4 +16,10 @@ class ProgressVideo {
   // Icons download
   static const iconColor = Colors.white;
   static const iconBackground = Color.fromRGBO(115, 91, 213, 1);
+  // Download size info
+  static const size = TextStyle(
+    color: Colors.grey,
+    fontWeight: FontWeight.w500,
+    letterSpacing: 1.2,
+  );
 }
