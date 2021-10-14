@@ -7,6 +7,9 @@ import 'information/search_error.dart';
 import 'information/waiting_data.dart';
 
 class BannerVideo extends StatelessWidget {
+  static const double width = 480;
+  static const double height = 218;
+
   final String url;
 
   const BannerVideo({required this.url, Key? key}) : super(key: key);
@@ -101,8 +104,8 @@ class BannerVideo extends StatelessWidget {
     );
 
     return Container(
-      width: 480,
-      height: 218,
+      width: BannerVideo.width,
+      height: BannerVideo.height,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(25),
         image: DecorationImage(
@@ -113,23 +116,23 @@ class BannerVideo extends StatelessWidget {
       child: Stack(
         fit: StackFit.expand,
         children: <Widget>[
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.5),
-                borderRadius: BorderRadius.circular(25),
-              ),
+          Container(
+            width: BannerVideo.width,
+            height: BannerVideo.height,
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(25),
             ),
           ),
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(16, 16, 0, 8),
-              child: Row(
-                children: <Widget>[
-                  left,
-                  right,
-                ],
-              ),
+          Container(
+            width: BannerVideo.width,
+            height: BannerVideo.height,
+            padding: const EdgeInsets.fromLTRB(16, 16, 0, 8),
+            child: Row(
+              children: <Widget>[
+                left,
+                right,
+              ],
             ),
           ),
         ],

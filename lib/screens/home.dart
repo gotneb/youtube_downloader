@@ -1,5 +1,6 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:youtube_downloader/components/information/welcome.dart';
 import 'package:youtube_downloader/components/banner_video.dart';
 import 'package:youtube_downloader/components/search_video.dart';
@@ -40,7 +41,38 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
+    _verifyStoragePermission();
+    _verifyNotificationsPermission();
     super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final body = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: widgets,
+    );
+
+    return Scaffold(
+      backgroundColor: const Color.fromRGBO(21, 25, 53, 1),
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(12, 30, 12, 0),
+        child: ListView(
+          children: [body],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _verifyStoragePermission() async {
+    var status = await Permission.storage.status;
+    if (status.isDenied) {
+      await Permission.storage.request();
+    }
+  }
+
+  // Verify if app can send notifcations, otherwise asks to user if it can
+  void _verifyNotificationsPermission() {
     AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
       if (!isAllowed) {
         showDialog(
@@ -77,23 +109,5 @@ class _HomeState extends State<Home> {
         );
       }
     });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final body = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: widgets,
-    );
-
-    return Scaffold(
-      backgroundColor: const Color.fromRGBO(21, 25, 53, 1),
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(12, 30, 12, 0),
-        child: ListView(
-          children: [body],
-        ),
-      ),
-    );
   }
 }

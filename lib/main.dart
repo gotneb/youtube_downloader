@@ -14,7 +14,7 @@ void main() async {
             channelKey: 'basic_channel',
             channelName: 'Basic notifications',
             channelDescription: 'Notification channel for basic tests',
-            defaultColor: Colors.purple,
+            defaultColor: Colors.transparent,
             ledColor: Colors.white)
       ]);
 
