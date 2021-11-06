@@ -14,7 +14,7 @@ void main() async {
             channelKey: 'basic_channel',
             channelName: 'Basic notifications',
             channelDescription: 'Notification channel for basic tests',
-            defaultColor: Colors.transparent,
+            defaultColor: Colors.purple,
             ledColor: Colors.white)
       ]);
 
@@ -24,19 +24,12 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Rost YoutubeDownloader',
+    return const MaterialApp(
+      title: 'Rost',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const Tabbar(screens: <Widget>[
-        Home(),
-        Downloads(),
-      ]),
+      home: Tabbar(screens: <Widget>[Home(), Downloads()]),
     );
   }
 }
