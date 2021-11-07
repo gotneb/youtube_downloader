@@ -10,25 +10,16 @@ class Downloads extends StatefulWidget {
   const Downloads({Key? key}) : super(key: key);
 
   static List<ProgressVideo> fetchProgress() => _progress;
-  static void add(Video video) {
+  static void add(Video video, StreamManifest manifest, YoutubeExplode yt) {
     _progress.add(ProgressVideo(
       video: video,
-      onClickedClose: () => removeFromStackDownloads(video),
+      manifest: manifest,
+      yt: yt,
     ));
     notifyDataChanged();
   }
 
   static VoidCallback notifyDataChanged = () {};
-
-  static void removeFromStackDownloads(Video download) {
-    for (var i = 0; i < _progress.length; i++) {
-      if (_progress[i].video == download) {
-        _progress.removeAt(i);
-        break;
-      }
-    }
-    notifyDataChanged();
-  }
 
   @override
   _DownloadingState createState() => _DownloadingState();

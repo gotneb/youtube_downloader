@@ -27,8 +27,9 @@ class BannerVideo extends StatelessWidget {
     }
   }
 
-  void addToDownloads(BuildContext context, Video video) {
-    Downloads.add(video);
+  Future<void> addToDownloads(BuildContext context, Video video,
+      YoutubeExplode youtube, StreamManifest manifest) async {
+    Downloads.add(video, manifest, youtube);
 
     const snackBar = SnackBar(
       content: Text('Realizando o download...', textAlign: TextAlign.center),
@@ -42,14 +43,18 @@ class BannerVideo extends StatelessWidget {
   Widget build(BuildContext context) {
     var yt = YoutubeExplode();
 
+    Future<Video> video = yt.videos.get(url);
+    Future<StreamManifest> manifest = yt.videos.streamsClient.getManifest(url);
+
     return FutureBuilder(
-      future: yt.videos.get(url),
-      builder: (context, snapshot) {
+      future: Future.wait([video, manifest]),
+      builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const WaitingData();
         } else if (snapshot.hasData) {
-          final video = snapshot.data as Video;
-          return buildBanner(context, video);
+          Video v = snapshot.data![0];
+          StreamManifest m = snapshot.data![1];
+          return buildBanner(context, v, yt, m);
         } else {
           return const SearchError();
         }
@@ -57,14 +62,18 @@ class BannerVideo extends StatelessWidget {
     );
   }
 
-  Widget buildBanner(BuildContext context, Video video) {
+  Widget buildBanner(BuildContext context, Video video, YoutubeExplode yt,
+      StreamManifest manifest) {
     final timeBox = Container(
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
       decoration: BoxDecoration(
         color: Colors.black.withOpacity(0.7),
         borderRadius: BorderRadius.circular(5),
       ),
-      child: Text(formatedTime(video.duration!), style: style.BannerVideo.time),
+      child: Text(
+        formatedTime(video.duration!),
+        style: style.BannerVideo.time,
+      ),
     );
 
     final downloadButton = Container(
@@ -75,7 +84,7 @@ class BannerVideo extends StatelessWidget {
       child: IconButton(
         color: style.BannerVideo.colorIconDownload,
         onPressed: () {
-          addToDownloads(context, video);
+          addToDownloads(context, video, yt, manifest);
         },
         icon: const Icon(Icons.download),
       ),

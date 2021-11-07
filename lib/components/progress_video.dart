@@ -7,13 +7,15 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 
 class ProgressVideo extends StatefulWidget {
   static const double _side = 50;
-  final VoidCallback onClickedClose;
+  final YoutubeExplode yt;
+  final StreamManifest manifest;
 
   final Video video;
 
   const ProgressVideo({
     required this.video,
-    required this.onClickedClose,
+    required this.yt,
+    required this.manifest,
     Key? key,
   }) : super(key: key);
 
@@ -25,13 +27,15 @@ class _ProgressVideoState extends State<ProgressVideo> {
   bool _isFinished = false;
   bool _isThereError = false;
   int _id = 10;
-  var _total = const FileSize(0);
+
+  late FileSize _total;
   var _received = 0;
   double _percent = 0;
 
   @override
   void initState() {
     super.initState();
+    _total = widget.manifest.muxed.withHighestBitrate().size;
     _startDownload();
   }
 
@@ -56,32 +60,40 @@ class _ProgressVideoState extends State<ProgressVideo> {
 
   Future<void> _startDownload() async {
     /*
-    // Only for tests
+    // NOTE: Only for tests
     Future.delayed(const Duration(seconds: 3)).whenComplete(() {
       _notifyDownloadDone();
     });
     */
-    var yt = YoutubeExplode();
     try {
-      var manifest = await yt.videos.streamsClient.getManifest(widget.video.id);
-      _total = manifest.muxed.withHighestBitrate().size;
-      var streamInfo = manifest.muxed.withHighestBitrate();
+      var streamInfo = widget.manifest.muxed.withHighestBitrate();
 
-      var stream = yt.videos.streamsClient.get(streamInfo);
+      var stream = widget.yt.videos.streamsClient.get(streamInfo);
       const downloadPath = '/storage/emulated/0/Download';
 
       var file = File('$downloadPath/${widget.video.title}.mp4');
-      var fileStream = file.openWrite();
+      // Delete the file if exists.
+      if (file.existsSync()) {
+        file.deleteSync();
+      }
 
-      await stream.map(_showDownloadProgress).pipe(fileStream);
+      var output = file.openWrite(mode: FileMode.writeOnlyAppend);
 
-      await fileStream.flush();
-      await fileStream.close();
+      await for (final data in stream) {
+        setState(() {
+          _received += data.length;
+          _percent = (_received / _total.totalBytes);
+          output.add(data);
+        });
+      }
+
+      await output.close();
       _notifyDownloadDone();
     } catch (e) {
+      debugPrint('Error: $e');
       _notifyDownloadError();
     } finally {
-      yt.close();
+      widget.yt.close();
     }
   }
 
@@ -104,15 +116,6 @@ class _ProgressVideoState extends State<ProgressVideo> {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (other is ProgressVideo) {
-      return other.video.title == widget.video.title;
-    }
-
-    return false;
-  }
-
-  @override
   Widget build(BuildContext context) {
     final about = SizedBox(
       height: 25,
@@ -125,15 +128,6 @@ class _ProgressVideoState extends State<ProgressVideo> {
               style: style.ProgressVideo.title,
               maxLines: 1,
               softWrap: true,
-            ),
-          ),
-          Opacity(
-            opacity: 0,
-            child: IconButton(
-              alignment: Alignment.centerRight,
-              icon: const Icon(Icons.close_rounded,
-                  color: style.ProgressVideo.cancelColor),
-              onPressed: _isFinished ? widget.onClickedClose : null,
             ),
           ),
         ],
@@ -198,14 +192,6 @@ class _ProgressVideoState extends State<ProgressVideo> {
         ],
       ),
     );
-  }
-
-  List<int> _showDownloadProgress(List<int> data) {
-    setState(() {
-      _received += data.length;
-      _percent = (_received / _total.totalBytes);
-    });
-    return data;
   }
 
   IconData _getIcon() {
