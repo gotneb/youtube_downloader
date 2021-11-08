@@ -29,7 +29,10 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       title: 'Rost',
       debugShowCheckedModeBanner: false,
-      home: Tabbar(screens: <Widget>[Home(), Downloads()]),
+      home: Tabbar(screens: <Widget>[
+        Home(),
+        Downloads(),
+      ]),
     );
   }
 }

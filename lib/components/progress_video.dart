@@ -1,21 +1,18 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:youtube_downloader/models/video_detail.dart';
 import 'package:youtube_downloader/styles/progress_video.dart' as style;
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 
 class ProgressVideo extends StatefulWidget {
   static const double _side = 50;
-  final YoutubeExplode yt;
-  final StreamManifest manifest;
 
-  final Video video;
+  final VideoDetail videoDetail;
 
   const ProgressVideo({
-    required this.video,
-    required this.yt,
-    required this.manifest,
+    required this.videoDetail,
     Key? key,
   }) : super(key: key);
 
@@ -35,7 +32,7 @@ class _ProgressVideoState extends State<ProgressVideo> {
   @override
   void initState() {
     super.initState();
-    _total = widget.manifest.muxed.withHighestBitrate().size;
+    _total = widget.videoDetail.streamInfo.size;
     _startDownload();
   }
 
@@ -49,7 +46,7 @@ class _ProgressVideoState extends State<ProgressVideo> {
             content: NotificationContent(
               id: _id++,
               channelKey: 'basic_channel',
-              title: widget.video.title,
+              title: widget.videoDetail.video.title,
               body: 'Sentimos muito :( Não foi possíve realizar o download.',
             ),
           );
@@ -66,18 +63,24 @@ class _ProgressVideoState extends State<ProgressVideo> {
     });
     */
     try {
-      var streamInfo = widget.manifest.muxed.withHighestBitrate();
+      var streamInfo = widget.videoDetail.streamInfo;
 
-      var stream = widget.yt.videos.streamsClient.get(streamInfo);
-      const downloadPath = '/storage/emulated/0/Download';
+      var stream = widget.videoDetail.yt.videos.streamsClient.get(streamInfo);
 
-      var file = File('$downloadPath/${widget.video.title}.mp4');
+      var downloadPath = '/storage/emulated/0/Download';
+      final container = widget.videoDetail.type == Type.video ? 'mp4' : 'mp3';
+      final name = widget.videoDetail.video.title
+          .replaceAll('/', '_')
+          .replaceAll('\\', '_');
+      debugPrint('NAME: $name');
+      var file = File('$downloadPath/$name.$container');
+
       // Delete the file if exists.
       if (file.existsSync()) {
         file.deleteSync();
       }
 
-      var output = file.openWrite(mode: FileMode.writeOnlyAppend);
+      var output = file.openWrite();
 
       await for (final data in stream) {
         setState(() {
@@ -92,8 +95,6 @@ class _ProgressVideoState extends State<ProgressVideo> {
     } catch (e) {
       debugPrint('Error: $e');
       _notifyDownloadError();
-    } finally {
-      widget.yt.close();
     }
   }
 
@@ -106,7 +107,7 @@ class _ProgressVideoState extends State<ProgressVideo> {
             content: NotificationContent(
               id: _id++,
               channelKey: 'basic_channel',
-              title: widget.video.title,
+              title: widget.videoDetail.video.title,
               body: 'Download concluído',
             ),
           );
@@ -124,7 +125,7 @@ class _ProgressVideoState extends State<ProgressVideo> {
         children: <Widget>[
           Flexible(
             child: Text(
-              widget.video.title.trim(),
+              widget.videoDetail.video.title.trim(),
               style: style.ProgressVideo.title,
               maxLines: 1,
               softWrap: true,
@@ -195,12 +196,14 @@ class _ProgressVideoState extends State<ProgressVideo> {
   }
 
   IconData _getIcon() {
+    var option = widget.videoDetail.type;
+
     if (_isThereError) {
       return Icons.report_problem;
     } else if (_isFinished) {
       return Icons.file_download_done_outlined;
     } else {
-      return Icons.videocam;
+      return option == Type.video ? Icons.videocam : Icons.headset;
     }
   }
 }

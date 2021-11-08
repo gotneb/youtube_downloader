@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:youtube_downloader/components/progress_video.dart';
+import 'package:youtube_downloader/models/video_detail.dart';
 import 'package:youtube_downloader/styles/downloads.dart' as style;
-import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class Downloads extends StatefulWidget {
   static const double _radius = 35;
@@ -10,11 +10,9 @@ class Downloads extends StatefulWidget {
   const Downloads({Key? key}) : super(key: key);
 
   static List<ProgressVideo> fetchProgress() => _progress;
-  static void add(Video video, StreamManifest manifest, YoutubeExplode yt) {
+  static void add(VideoDetail detail) {
     _progress.add(ProgressVideo(
-      video: video,
-      manifest: manifest,
-      yt: yt,
+      videoDetail: detail,
     ));
     notifyDataChanged();
   }

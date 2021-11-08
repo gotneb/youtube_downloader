@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:youtube_downloader/screens/downloads.dart';
+import 'package:youtube_downloader/components/download_options.dart';
 import 'package:youtube_downloader/styles/banner_video.dart' as style;
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
@@ -27,16 +27,29 @@ class BannerVideo extends StatelessWidget {
     }
   }
 
-  Future<void> addToDownloads(BuildContext context, Video video,
-      YoutubeExplode youtube, StreamManifest manifest) async {
-    Downloads.add(video, manifest, youtube);
-
-    const snackBar = SnackBar(
-      content: Text('Realizando o download...', textAlign: TextAlign.center),
-      duration: Duration(milliseconds: 800),
+  void addToDownloads(
+    BuildContext context,
+    Video video,
+    YoutubeExplode youtube,
+    StreamManifest manifest,
+  ) {
+    showDialog(
+      context: context,
+      builder: (_) => DownloadOptions(
+        video: video,
+        manifest: manifest,
+        yt: youtube,
+        onClicked: () {
+          const snackBar = SnackBar(
+            content:
+                Text('Realizando o download...', textAlign: TextAlign.center),
+            duration: Duration(milliseconds: 800),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          Navigator.pop(context);
+        },
+      ),
     );
-
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override
