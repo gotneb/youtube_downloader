@@ -6,6 +6,9 @@ import 'package:youtube_downloader/styles/progress_video.dart' as style;
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 
+import 'package:file_support/file_support.dart';
+import 'package:media_store/media_store.dart';
+
 class ProgressVideo extends StatefulWidget {
   static const double _side = 50;
 
@@ -62,18 +65,17 @@ class _ProgressVideoState extends State<ProgressVideo> {
       _notifyDownloadDone();
     });
     */
+    var downloadPath = await FileSupport().getDownloadFolderPath();
+    final container = widget.videoDetail.streamInfo.container;
+    final name = widget.videoDetail.video.title
+        .replaceAll('/', '_')
+        .replaceAll('\\', '_')
+        .replaceAll('!', '_');
+    var file = File('$downloadPath/$name.$container');
+
     try {
       var streamInfo = widget.videoDetail.streamInfo;
-
       var stream = widget.videoDetail.yt.videos.streamsClient.get(streamInfo);
-
-      var downloadPath = '/storage/emulated/0/Download';
-      final container = widget.videoDetail.type == Type.video ? 'mp4' : 'mp3';
-      final name = widget.videoDetail.video.title
-          .replaceAll('/', '_')
-          .replaceAll('\\', '_');
-      debugPrint('NAME: $name');
-      var file = File('$downloadPath/$name.$container');
 
       // Delete the file if exists.
       if (file.existsSync()) {
@@ -81,7 +83,6 @@ class _ProgressVideoState extends State<ProgressVideo> {
       }
 
       var output = file.openWrite();
-
       await for (final data in stream) {
         setState(() {
           _received += data.length;
@@ -91,9 +92,16 @@ class _ProgressVideoState extends State<ProgressVideo> {
       }
 
       await output.close();
+      // Refresh android media and generate a new file inside Rost folder
+      await MediaStore.saveFile(file.path);
+      // Delete older file
+      file.deleteSync();
       _notifyDownloadDone();
     } catch (e) {
       debugPrint('Error: $e');
+      if (file.existsSync()) {
+        file.deleteSync();
+      }
       _notifyDownloadError();
     }
   }

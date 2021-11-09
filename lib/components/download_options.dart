@@ -31,7 +31,6 @@ class DownloadOptions extends StatelessWidget {
       video: video,
       yt: yt,
     );
-    debugPrint('${manifest.audioOnly}');
   }
 
   @override
