@@ -7,7 +7,7 @@ import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 
 import 'package:file_support/file_support.dart';
-import 'package:media_store/media_store.dart';
+// import 'package:media_store/media_store.dart';
 
 class ProgressVideo extends StatefulWidget {
   static const double _side = 50;
@@ -93,7 +93,7 @@ class _ProgressVideoState extends State<ProgressVideo> {
 
       await output.close();
       // Refresh android media and generate a new file inside Rost folder
-      await MediaStore.saveFile(file.path);
+      // await MediaStore.saveFile(file.path);
       // Delete older file
       file.deleteSync();
       _notifyDownloadDone();
