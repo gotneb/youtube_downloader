@@ -97,14 +97,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.3"
-  csslib:
-    dependency: transitive
-    description:
-      name: csslib
-      sha256: "706b5707578e0c1b4b7550f64078f0a0f19dec3f50a178ffae7006b0a9ca58fb"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   dio:
     dependency: "direct main"
     description:
@@ -142,6 +134,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_floating_bottom_bar:
+    dependency: "direct main"
+    description:
+      name: flutter_floating_bottom_bar
+      sha256: e131b970405b46d678fef49f791e4a5332b06e48fe9d41d88cd91d0ab6c52c4a
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.0"
   flutter_image_compress:
     dependency: transitive
     description:
@@ -176,14 +176,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  freezed_annotation:
-    dependency: transitive
-    description:
-      name: freezed_annotation
-      sha256: c3fd9336eb55a38cc1bbd79ab17573113a8deccd0ecbbf926cca3c62803b5c2d
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.4.1"
   gallery_saver:
     dependency: "direct main"
     description:
@@ -192,14 +184,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.2"
-  html:
-    dependency: transitive
+  gap:
+    dependency: "direct main"
     description:
-      name: html
-      sha256: "3a7812d5bcd2894edf53dfaf8cd640876cf6cef50a8f238745c8b8120ea74d3a"
+      name: gap
+      sha256: f19387d4e32f849394758b91377f9153a1b41d79513ef7668c088c77dbc6955d
       url: "https://pub.dev"
     source: hosted
-    version: "0.15.4"
+    version: "3.0.1"
   http:
     dependency: "direct main"
     description:
@@ -256,6 +248,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"
+  loading_animations:
+    dependency: "direct main"
+    description:
+      name: loading_animations
+      sha256: c62a8c1fbbe5ade3ac2814128a9aa92ee784756b11ad9e6a915b673b90005cc8
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.0"
   logger:
     dependency: "direct main"
     description:
@@ -541,14 +541,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.2"
-  youtube_explode_dart:
-    dependency: "direct main"
-    description:
-      name: youtube_explode_dart
-      sha256: "07889a6229a63e78f8d45a3b852897c2e0fa42e96c4daa38d411be211575bc38"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.12.4"
 sdks:
   dart: ">=3.1.0-185.0.dev <4.0.0"
   flutter: ">=3.7.0"

@@ -1,39 +1,24 @@
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
-import 'package:youtube_downloader/screens/downloads.dart';
-
-import 'screens/home.dart';
-import 'screens/tabbar.dart';
+import 'package:youtube_downloader/app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  AwesomeNotifications().initialize(
-      // set the icon to null if you want to use the default app icon
-      'resource://drawable/res_app_icon',
-      [
-        NotificationChannel(
-            channelKey: 'basic_channel',
-            channelName: 'Basic notifications',
-            channelDescription: 'Notification channel for basic tests',
-            defaultColor: Colors.purple,
-            ledColor: Colors.white)
-      ]);
 
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Rost',
-      debugShowCheckedModeBanner: false,
-      home: Tabbar(screens: <Widget>[
-        Home(),
-        Downloads(),
-      ]),
+      theme: ThemeData(
+        useMaterial3: true,
+        colorSchemeSeed: Colors.pink[400],
+      ),
+      home: const App(),
     );
   }
 }

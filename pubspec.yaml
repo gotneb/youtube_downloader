@@ -17,12 +17,14 @@ dependencies:
   awesome_notifications: ^0.8.2
   async: ^2.8.1
   flutter_launcher_icons: ^0.13.1
-  youtube_explode_dart: ^1.10.8
   file_support: ^1.0.3+4
   logger: ^1.4.0
   http: ^0.13.6
   dio: ^4.0.6
   gallery_saver: ^2.3.2
+  gap: ^3.0.1
+  loading_animations: ^2.2.0
+  flutter_floating_bottom_bar: ^1.2.0
 
 flutter_icons:
   image_path: "assets/icon/icon.png"
