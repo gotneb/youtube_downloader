@@ -6,6 +6,7 @@ import 'screens/home.dart';
 import 'screens/tabbar.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   AwesomeNotifications().initialize(
       // set the icon to null if you want to use the default app icon
       'resource://drawable/res_app_icon',

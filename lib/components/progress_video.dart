@@ -1,13 +1,10 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:youtube_downloader/models/video_detail.dart';
+import 'package:youtube_downloader/server/api.dart';
 import 'package:youtube_downloader/styles/progress_video.dart' as style;
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
-
-import 'package:file_support/file_support.dart';
-// import 'package:media_store/media_store.dart';
+import 'package:youtube_downloader/debug/logging.dart';
 
 class ProgressVideo extends StatefulWidget {
   static const double _side = 50;
@@ -15,12 +12,12 @@ class ProgressVideo extends StatefulWidget {
   final VideoDetail videoDetail;
 
   const ProgressVideo({
+    super.key,
     required this.videoDetail,
-    Key? key,
-  }) : super(key: key);
+  });
 
   @override
-  _ProgressVideoState createState() => _ProgressVideoState();
+  State<ProgressVideo> createState() => _ProgressVideoState();
 }
 
 class _ProgressVideoState extends State<ProgressVideo> {
@@ -65,43 +62,18 @@ class _ProgressVideoState extends State<ProgressVideo> {
       _notifyDownloadDone();
     });
     */
-    var downloadPath = await FileSupport().getDownloadFolderPath();
-    final container = widget.videoDetail.streamInfo.container;
-    final name = widget.videoDetail.video.title
-        .replaceAll('/', '_')
-        .replaceAll('\\', '_')
-        .replaceAll('!', '_');
-    var file = File('$downloadPath/$name.$container');
+
+    final title = sanitizeFileName(widget.videoDetail.video.title);
+    logger.d('Original title: ${widget.videoDetail.video.title}\nFormated title: $title');
 
     try {
-      var streamInfo = widget.videoDetail.streamInfo;
-      var stream = widget.videoDetail.yt.videos.streamsClient.get(streamInfo);
-
-      // Delete the file if exists.
-      if (file.existsSync()) {
-        file.deleteSync();
-      }
-
-      var output = file.openWrite();
-      await for (final data in stream) {
-        setState(() {
-          _received += data.length;
-          _percent = (_received / _total.totalBytes);
-          output.add(data);
-        });
-      }
-
-      await output.close();
-      // Refresh android media and generate a new file inside Rost folder
-      // await MediaStore.saveFile(file.path);
-      // Delete older file
-      file.deleteSync();
+      final options =
+          await Api.getUrlDownloadVideo(id: widget.videoDetail.video.id.value);
+      final video = options.last;
+      video.download(filename: '$title.mp4', url: video.url);
       _notifyDownloadDone();
     } catch (e) {
-      debugPrint('Error: $e');
-      if (file.existsSync()) {
-        file.deleteSync();
-      }
+      logger.e('Error when downloading/saving video/music...\n$e');
       _notifyDownloadError();
     }
   }
@@ -123,6 +95,22 @@ class _ProgressVideoState extends State<ProgressVideo> {
       });
     });
   }
+
+  String sanitizeFileName(String fileName) {
+  final List<String> notAllowedChars = ['/', '\\', ':', '*', '?', '"', '<', '>', '|', '&', '%', '#', '\'', '!', '~'];
+
+  for (final char in notAllowedChars) {
+    fileName = fileName.replaceAll(char, '');
+  }
+
+  fileName = fileName.trim();
+
+  if (fileName.isEmpty) {
+    fileName = 'unnamed_file';
+  }
+
+  return fileName;
+}
 
   @override
   Widget build(BuildContext context) {
