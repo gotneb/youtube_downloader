@@ -5,11 +5,11 @@ import 'package:dio/dio.dart';
 import 'package:file_support/file_support.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 // Mine
-import 'package:youtube_downloader/debug/logging.dart';
+import 'package:youtube_downloader/constants.dart';
 
-class DownloadOption {
-  factory DownloadOption.fromJson(Map<String, dynamic> json) {
-    return DownloadOption._(
+class MediaStream {
+  factory MediaStream.fromJson(Map<String, dynamic> json) {
+    return MediaStream._(
       json['bitrate'] as String,
       json['size'] as String,
       json['type'] as String,
@@ -17,7 +17,7 @@ class DownloadOption {
     );
   }
 
-  const DownloadOption._(
+  const MediaStream._(
     this.bitrate,
     this.megabytesSize,
     this.type,
