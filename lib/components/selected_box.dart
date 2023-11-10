@@ -4,11 +4,11 @@ class SelectedBox extends StatefulWidget {
   const SelectedBox({
     super.key,
     required this.activeColor,
-    required this.active,
+    required this.selected,
   });
 
   final Color activeColor;
-  final bool active;
+  final bool selected;
 
   @override
   State<SelectedBox> createState() => _SelectedBoxState();
@@ -21,18 +21,17 @@ class _SelectedBoxState extends State<SelectedBox> {
 
     final icon = Icon(Icons.done, size: 16);
 
-
     return Container(
       width: side,
       height: side,
       decoration: BoxDecoration(
-          color: widget.active ? widget.activeColor : Colors.white,
+          color: widget.selected ? widget.activeColor : Colors.white,
           borderRadius: BorderRadius.circular(2),
           border: Border.all(
-            color: widget.active ? Colors.transparent : Colors.black,
+            color: widget.selected ? Colors.transparent : Colors.black,
             width: 2,
           )),
-      child: widget.active ? Center(child: icon) : null,
+      child: widget.selected ? Center(child: icon) : null,
     );
   }
 }

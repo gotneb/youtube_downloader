@@ -15,7 +15,7 @@ class MediaItemRow extends StatefulWidget {
 class _MediaItemRowState extends State<MediaItemRow> {
   static const videoIcon = Icon(Icons.videocam_outlined, size: 32);
 
-  var _isActive = true;
+  var _isSelected = false;
 
   @override
   Widget build(BuildContext context) => InkWell(
@@ -30,14 +30,14 @@ class _MediaItemRowState extends State<MediaItemRow> {
             const Spacer(),
             Text(widget.stream.megabytesSize),
             const Gap(8),
-            SelectedBox(activeColor: Colors.red, active: _isActive),
+            SelectedBox(activeColor: Colors.red, selected: _isSelected),
           ],
         ),
       );
 
   void _switchState() {
     setState(() {
-      _isActive = !_isActive;
+      _isSelected = !_isSelected;
     });
   }
 }
