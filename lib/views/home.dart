@@ -34,8 +34,7 @@ class _HomeViewState extends State<HomeView> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 24),
       width: MediaQuery.sizeOf(context).width,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: ListView(
         children: [
           Text('Cole o link aqui'),
           Gap(12),

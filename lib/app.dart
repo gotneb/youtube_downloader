@@ -80,6 +80,7 @@ class _AppState extends State<App> with SingleTickerProviderStateMixin {
 
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: bottomBar,
       ),
     );
