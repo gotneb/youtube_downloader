@@ -9,7 +9,10 @@ import 'package:youtube_downloader/constants.dart';
 
 class MediaStream {
   factory MediaStream.fromJson(Map<String, dynamic> json) {
+    logger.d(json);
+
     return MediaStream._(
+      json['resolution'] as String,
       json['bitrate'] as String,
       json['size'] as String,
       json['type'] as String,
@@ -18,6 +21,7 @@ class MediaStream {
   }
 
   const MediaStream._(
+    this.resolution,
     this.bitrate,
     this.megabytesSize,
     this.type,
@@ -26,6 +30,8 @@ class MediaStream {
 
   // Audio doesn't have bitrate
   final String? bitrate;
+  // Audio doesn't have resolution
+  final String resolution;
   final String megabytesSize;
   final String type;
   final String url;
@@ -67,4 +73,8 @@ class MediaStream {
 
   @override
   String toString() => "$type | $bitrate | $megabytesSize";
+
+  bool get isAudio => type.contains('audio');
+  bool get isVideo => type.contains('video'); 
+  String get format => type.split('/').last;
 }

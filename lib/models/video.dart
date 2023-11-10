@@ -3,8 +3,24 @@ import 'package:youtube_downloader/models/media_stream.dart';
 class Video {
   factory Video.fromJson(Map<String, dynamic> json) {
     final streams = <MediaStream>[];
-    json['audio'].map((json) => streams.add(MediaStream.fromJson(json)));
-    json['video'].map((json) => streams.add(MediaStream.fromJson(json)));
+
+    // TODO: Refactor it, I can use map on it
+    // But for some odd reason, I'm it's triggering an error
+    // do it in the future...
+
+    // Audio
+    // final List<dynamic> audioStreams = json['audio'];
+    // for (final e in audioStreams) {
+    //   final media = MediaStream.fromJson(e);
+    //   streams.add(media);
+    // }
+
+    // Video
+    final List<dynamic> videoStreams = json['video'];
+    for (final e in videoStreams) {
+      final media = MediaStream.fromJson(e);
+      streams.add(media);
+    }
   
     return Video._(
       author: json['author'] as String,
@@ -30,14 +46,14 @@ class Video {
   final String thumb;
   final int views;
   final String author;
-  final List<MediaStream>? streams;
+  final List<MediaStream> streams;
 
   @override
-  String toString() => 'Title: $title\nAuthor: $author\nViews: $views\nDuration: $time';
+  String toString() => 'Title: $title\nAuthor: $author\nViews: $views\nDuration: $time\nStreams: ${streams.length}';
 
   String get time {
     final total = duration;
-    final minutes = (total ~/ 60).toString().padLeft(2, '0');
+    final minutes = (total ~/ 60).toString();
     final seconds = (total % 60).toString().padLeft(2, '0');
     return '$minutes:$seconds';
   }
