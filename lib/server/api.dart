@@ -15,7 +15,7 @@ class Api {
     final url = '/api/data/$id';
 
     final raw = await http.get(Uri.https(_path, url));
-    dynamic json = jsonDecode(raw.body);
+    dynamic json = jsonDecode(utf8.decode(raw.bodyBytes));
 
     return Video.fromJson(json);
   }
