@@ -37,9 +37,19 @@ class _CardDownloadState extends State<CardDownload> {
         ),
       );
 
-  Widget _buildImageVideo() => ClipRRect(
-        borderRadius: BorderRadius.circular(CardDownload._radius),
-        child: Image.network(widget.option.video.thumb),
+  Widget _buildImageVideo(BuildContext context) => Container(
+        height: 0.2 * MediaQuery.sizeOf(context).height,
+        width: 0.35 * MediaQuery.sizeOf(context).width,
+        decoration: BoxDecoration(
+            color: Colors.black,
+            borderRadius: BorderRadius.circular(CardDownload._radius)),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(CardDownload._radius),
+          child: Image.network(
+            widget.option.video.thumb,
+            fit: BoxFit.fitHeight,
+          ),
+        ),
       );
 
   @override
@@ -54,7 +64,7 @@ class _CardDownloadState extends State<CardDownload> {
             borderRadius: BorderRadius.circular(CardDownload._radius),
           ),
           child: Row(children: [
-            _buildImageVideo(),
+            _buildImageVideo(context),
             Gap(12),
             _buildVideoInfo(),
           ])),

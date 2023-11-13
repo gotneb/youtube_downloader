@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
 import 'package:youtube_downloader/constants.dart';
-import 'package:youtube_downloader/models/download_option.dart';
 import 'package:youtube_downloader/views/downloads.dart';
 import 'package:youtube_downloader/views/home.dart';
 
@@ -17,8 +16,6 @@ class _AppState extends State<App> with SingleTickerProviderStateMixin {
 
   late int currentPage;
   late TabController tabController;
-
-  final videosForDownload = <DownloadOption>[];
 
   @override
   void initState() {
@@ -60,7 +57,7 @@ class _AppState extends State<App> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     final tabs = [
       const HomeView(),
-      DownloadsView(toDownload: videosForDownload),
+      const DownloadsView(),
     ];
 
     final tabbar = TabBar(

@@ -51,6 +51,8 @@ class Video {
   @override
   String toString() => 'Title: $title\nAuthor: $author\nViews: $views\nDuration: $time\nStreams: ${streams.length}';
 
+  String get cover => 'https://i3.ytimg.com/vi/aO-ZaF4FJls/maxresdefault.jpg';
+
   String get time {
     final total = duration;
     final minutes = (total ~/ 60).toString();

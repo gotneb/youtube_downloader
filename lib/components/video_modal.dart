@@ -1,15 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:provider/provider.dart';
 import 'package:youtube_downloader/components/media_item_row.dart';
+import 'package:youtube_downloader/models/download_option.dart';
+import 'package:youtube_downloader/models/selected_videos.dart';
 import 'package:youtube_downloader/models/video.dart';
 
-class VideoModal extends StatelessWidget {
+import '../constants.dart';
+
+class VideoModal extends StatefulWidget {
   const VideoModal({
     super.key,
     required this.media,
   });
 
   final Video media;
+
+  @override
+  State<VideoModal> createState() => _VideoModalState();
+}
+
+class _VideoModalState extends State<VideoModal> {
+  late final List<bool> _selectedIndexes;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndexes = List.generate(
+      widget.media.streams.length,
+      (_) => false,
+    );
+  }
 
   Widget _buildBody(BuildContext context) {
     return Column(children: [
@@ -24,7 +45,7 @@ class VideoModal extends StatelessWidget {
       Gap(8),
       _buildListOptions(context),
       Gap(8),
-      _buildDownloadButton(),
+      _buildDownloadButton(context),
     ]);
   }
 
@@ -33,14 +54,37 @@ class VideoModal extends StatelessWidget {
         child: ListView(
           shrinkWrap: true,
           children: List.generate(
-            media.streams.length,
-            (index) => MediaItemRow(stream: media.streams[index]),
+            widget.media.streams.length,
+            (index) => InkWell(
+              onTap: () => setState(() {
+                _selectedIndexes[index] = !_selectedIndexes[index];
+              }),
+              child: MediaItemRow(
+                stream: widget.media.streams[index],
+                isSelected: _selectedIndexes[index],
+              ),
+            ),
           ),
         ),
       );
 
-  Widget _buildDownloadButton() => ElevatedButton(
-        onPressed: () {},
+  Widget _buildDownloadButton(BuildContext context) => ElevatedButton(
+        onPressed: () {
+          logger.d('Selected streams: $_selectedIndexes');
+          for (var index = 0; index < _selectedIndexes.length; index++) {
+            if (_selectedIndexes[index]) {
+              final stream = widget.media.streams.elementAt(index);
+              final selected = DownloadOption(
+                stream: stream,
+                video: widget.media,
+              );
+              Provider.of<SelectedVideos>(
+                context,
+                listen: false,
+              ).add(selected);
+            }
+          }
+        },
         child: Center(child: Text('Download')),
       );
 
@@ -55,12 +99,12 @@ class VideoModal extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    media.title,
+                    widget.media.title,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const Gap(8),
-                  Text(media.author),
+                  Text(widget.media.author),
                 ]),
           ),
         ]),
@@ -76,7 +120,7 @@ class VideoModal extends StatelessWidget {
       ),
       child: Center(
           child: Text(
-        media.time,
+        widget.media.time,
         style: TextStyle(color: Colors.white),
       )),
     );
@@ -84,7 +128,7 @@ class VideoModal extends StatelessWidget {
     final imageThumb = ClipRRect(
       borderRadius: BorderRadius.circular(8),
       child: Image.network(
-        media.thumb,
+        widget.media.thumb,
         filterQuality: FilterQuality.high,
         fit: BoxFit.fill,
       ),
