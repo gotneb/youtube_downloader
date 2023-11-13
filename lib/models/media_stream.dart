@@ -8,15 +8,17 @@ import 'package:gallery_saver/gallery_saver.dart';
 import 'package:youtube_downloader/constants.dart';
 
 class MediaStream {
-  factory MediaStream.fromJson(Map<String, dynamic> json) {
-    logger.d(json);
-
+  factory MediaStream.fromJson(
+    Map<String, dynamic> json, {
+    void Function(int, int)? onProgress,
+  }) {
     return MediaStream._(
       json['resolution'] as String,
       json['bitrate'] as String,
       json['size'] as String,
       json['type'] as String,
       json['url'] as String,
+      onProgress,
     );
   }
 
@@ -26,6 +28,7 @@ class MediaStream {
     this.megabytesSize,
     this.type,
     this.url,
+    this.onProgress,
   );
 
   // Audio doesn't have bitrate
@@ -35,6 +38,8 @@ class MediaStream {
   final String megabytesSize;
   final String type;
   final String url;
+  // Callback for listen changes on donwload
+  final void Function(int, int)? onProgress;
 
   Future<void> download({
     required String filename,
@@ -58,7 +63,7 @@ class MediaStream {
     logger.d('path: $path');
     logger.d('url: $url');
 
-    await Dio().download(url, path);
+    await Dio().download(url, path, onReceiveProgress: onProgress);
     await GallerySaver.saveVideo(path);
     logger.i('Download finished!');
 
@@ -75,6 +80,6 @@ class MediaStream {
   String toString() => "$type | $bitrate | $megabytesSize";
 
   bool get isAudio => type.contains('audio');
-  bool get isVideo => type.contains('video'); 
+  bool get isVideo => type.contains('video');
   String get format => type.split('/').last;
 }

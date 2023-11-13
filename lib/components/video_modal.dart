@@ -44,9 +44,8 @@ class VideoModal extends StatelessWidget {
         child: Center(child: Text('Download')),
       );
 
-  Widget _buildVideoDetail() => Container(
+  Widget _buildVideoDetail() => SizedBox(
         height: 90,
-        color: Colors.yellow,
         child: Row(children: [
           _buildVideoThumb(),
           const Gap(8),
@@ -60,6 +59,7 @@ class VideoModal extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
+                  const Gap(8),
                   Text(media.author),
                 ]),
           ),
@@ -117,8 +117,8 @@ class VideoModal extends StatelessWidget {
     const radius = Radius.circular(24);
 
     return Container(
-      decoration: BoxDecoration(
-        color: Colors.green,
+      decoration: const BoxDecoration(
+        color: Colors.white,
         borderRadius: BorderRadius.only(topLeft: radius, topRight: radius),
       ),
       height: 0.7 * MediaQuery.sizeOf(context).height,
