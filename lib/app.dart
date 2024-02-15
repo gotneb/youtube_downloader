@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
 import 'package:youtube_downloader/constants.dart';
+import 'package:youtube_downloader/models/media_controller.dart';
 import 'package:youtube_downloader/views/downloads.dart';
 import 'package:youtube_downloader/views/home.dart';
 
@@ -14,12 +15,29 @@ class App extends StatefulWidget {
 class _AppState extends State<App> with SingleTickerProviderStateMixin {
   static const rowHeight = 40.0;
 
+  late final List<Widget> _tabs;
+
   late int currentPage;
   late TabController tabController;
+
+  final controller = MediaController();
 
   @override
   void initState() {
     super.initState();
+
+    _tabs = [
+      HomeView(
+        key: Key('home'),
+        controller: controller,
+      ),
+      DownloadsView(
+        key: Key('downloads'),
+        controller: controller,
+      ),
+    ];
+
+    // From package docs
     currentPage = 0;
     tabController = TabController(length: 2, vsync: this);
     tabController.animation?.addListener(
@@ -55,11 +73,6 @@ class _AppState extends State<App> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final tabs = [
-      const HomeView(),
-      const DownloadsView(),
-    ];
-
     final tabbar = TabBar(
       indicatorColor: Colors.transparent,
       enableFeedback: false,
@@ -76,7 +89,7 @@ class _AppState extends State<App> with SingleTickerProviderStateMixin {
       barColor: Colors.white,
       body: (_, controller) => TabBarView(
         controller: tabController,
-        children: tabs,
+        children: _tabs,
       ),
       child: tabbar,
     );

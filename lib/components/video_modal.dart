@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:provider/provider.dart';
 import 'package:youtube_downloader/components/media_item_row.dart';
 import 'package:youtube_downloader/models/download_option.dart';
-import 'package:youtube_downloader/models/selected_videos.dart';
+import 'package:youtube_downloader/models/media_controller.dart';
 import 'package:youtube_downloader/models/video.dart';
 
 import '../constants.dart';
@@ -12,9 +11,11 @@ class VideoModal extends StatefulWidget {
   const VideoModal({
     super.key,
     required this.media,
+    required this.controller,
   });
 
   final Video media;
+  final MediaController controller;
 
   @override
   State<VideoModal> createState() => _VideoModalState();
@@ -78,10 +79,9 @@ class _VideoModalState extends State<VideoModal> {
                 stream: stream,
                 video: widget.media,
               );
-              Provider.of<SelectedVideos>(
-                context,
-                listen: false,
-              ).add(selected);
+              // TODO: add selected video
+              widget.controller.addMedia(selected);
+              Navigator.pop(context);
             }
           }
         },

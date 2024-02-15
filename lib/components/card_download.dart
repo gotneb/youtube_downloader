@@ -17,6 +17,10 @@ class CardDownload extends StatefulWidget {
 }
 
 class _CardDownloadState extends State<CardDownload> {
+  var _downloadStarted = false;
+  var _receveid = 0;
+  var _total = 0;
+
   Widget _buildVideoInfo() => Flexible(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -27,9 +31,9 @@ class _CardDownloadState extends State<CardDownload> {
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
-            Text('37.1 MB / 67.2 MB'),
+            Text('${byte2Megabyte(_receveid)} / ${byte2Megabyte(_total)}'),
             LinearProgressIndicator(
-              value: 0.4,
+              value: _total == 0 ? 0 : _receveid / _total,
               minHeight: 6,
               borderRadius: BorderRadius.circular(CardDownload._radius),
             ),
@@ -54,6 +58,11 @@ class _CardDownloadState extends State<CardDownload> {
 
   @override
   Widget build(BuildContext context) {
+    if (!_downloadStarted) {
+      widget.option.stream.download(onProgress: onProgress);
+      _downloadStarted = true;
+    }
+
     return Card(
       elevation: 12,
       child: Container(
@@ -65,9 +74,21 @@ class _CardDownloadState extends State<CardDownload> {
           ),
           child: Row(children: [
             _buildImageVideo(context),
-            Gap(12),
+            const Gap(12),
             _buildVideoInfo(),
           ])),
     );
+  }
+
+  void onProgress(int receveid, int total) {
+    setState(() {
+      _receveid = receveid;
+      _total = total;
+    });
+  }
+
+  String byte2Megabyte(int bytes) {
+    double mb = bytes / (1024 * 1024);
+    return "${mb.toStringAsFixed(1)} MB";
   }
 }

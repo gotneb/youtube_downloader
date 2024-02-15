@@ -18,7 +18,6 @@ class MediaStream {
       json['size'] as String,
       json['type'] as String,
       json['url'] as String,
-      onProgress,
     );
   }
 
@@ -28,7 +27,6 @@ class MediaStream {
     this.megabytesSize,
     this.type,
     this.url,
-    this.onProgress,
   );
 
   // Audio doesn't have bitrate
@@ -38,48 +36,34 @@ class MediaStream {
   final String megabytesSize;
   final String type;
   final String url;
-  // Callback for listen changes on donwload
-  final void Function(int, int)? onProgress;
 
-  Future<void> download({
-    required String filename,
-    required String url,
-  }) async {
+  Future<void> download({void Function(int, int)? onProgress}) async {
     final tempDir = await getTemporaryDirectory();
     logger.d('temp: $tempDir');
 
-    final path = '${tempDir.path}/$filename';
+    final path = '${tempDir.path}/example.mp4';
     logger.d('path: $path');
 
     var file = File(path);
     if (!(await file.exists())) {
       file = await file.create();
-      logger.d('File created!');
+      logger.d('Cache file created!');
     } else {
-      logger.w('Deleting cache video file...');
+      logger.w('Deleting cache file...');
       await file.delete();
     }
 
-    logger.d('path: $path');
     logger.d('url: $url');
 
     await Dio().download(url, path, onReceiveProgress: onProgress);
     await GallerySaver.saveVideo(path);
     logger.i('Download finished!');
 
-    logger.w('Deleting cache video file...');
+    logger.i('Deleting cache video file...');
     await file.delete();
-  }
-
-  void debugProgress(int? received, int? total) {
-    final percent = (received! / total! * 100).toStringAsFixed(0);
-    logger.d('$percent%');
   }
 
   @override
   String toString() => "$type | $bitrate | $megabytesSize";
-
-  bool get isAudio => type.contains('audio');
-  bool get isVideo => type.contains('video');
   String get format => type.split('/').last;
 }

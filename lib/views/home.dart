@@ -3,6 +3,7 @@ import 'package:gap/gap.dart';
 import 'package:loading_animations/loading_animations.dart';
 import 'package:youtube_downloader/components/video_modal.dart';
 import 'package:youtube_downloader/constants.dart';
+import 'package:youtube_downloader/models/media_controller.dart';
 import 'package:youtube_downloader/server/api.dart';
 
 enum HomeState {
@@ -13,7 +14,9 @@ enum HomeState {
 }
 
 class HomeView extends StatefulWidget {
-  const HomeView({super.key});
+  const HomeView({super.key, required this.controller});
+
+  final MediaController controller;
 
   @override
   State<HomeView> createState() => _HomeViewState();
@@ -120,7 +123,10 @@ class _HomeViewState extends State<HomeView> {
       return await showModalBottomSheet(
         context: context,
         isScrollControlled: true,
-        builder: (_) => VideoModal(media: video),
+        builder: (_) => VideoModal(
+          media: video,
+          controller: widget.controller,
+        ),
       );
     } catch (_) {
       setState(() {

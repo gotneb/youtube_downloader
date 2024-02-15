@@ -25,7 +25,7 @@ dependencies:
   gap: ^3.0.1
   loading_animations: ^2.2.0
   flutter_floating_bottom_bar: ^1.2.0
-  provider: ^6.1.1
+  get: ^4.6.6
 
 flutter_icons:
   image_path: "assets/icon/icon.png"

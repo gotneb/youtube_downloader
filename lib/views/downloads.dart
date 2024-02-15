@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:youtube_downloader/components/card_download.dart';
-import 'package:youtube_downloader/models/selected_videos.dart';
+import 'package:youtube_downloader/models/media_controller.dart';
 
 class DownloadsView extends StatelessWidget {
   const DownloadsView({
     super.key,
+    required this.controller,
   });
 
-  Widget _buildBody() => Consumer<SelectedVideos>(
-        builder: (context, toDownload, child) => ListView.builder(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          itemCount: toDownload.length,
-          itemBuilder: (_, i) => CardDownload(option: toDownload.get(i)),
-        ),
-      );
+  final MediaController controller;
+
+  Widget _buildBody() {
+    return ListView.builder(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      itemCount: controller.medias.length,
+      itemBuilder: (_, i) => CardDownload(option: controller.medias[i]),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
