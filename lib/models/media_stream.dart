@@ -41,7 +41,7 @@ class MediaStream {
     final tempDir = await getTemporaryDirectory();
     logger.d('temp: $tempDir');
 
-    final path = '${tempDir.path}/example.mp4';
+    final path = '${tempDir.path}/${_getStreamName()}.mp4';
     logger.d('path: $path');
 
     var file = File(path);
@@ -61,6 +61,10 @@ class MediaStream {
 
     logger.i('Deleting cache video file...');
     await file.delete();
+  }
+
+  String _getStreamName() {
+    return 'exmaple';
   }
 
   @override

@@ -1,6 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
-import 'package:youtube_downloader/constants.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:youtube_downloader/models/media_controller.dart';
 import 'package:youtube_downloader/views/downloads.dart';
 import 'package:youtube_downloader/views/home.dart';
@@ -12,93 +12,72 @@ class App extends StatefulWidget {
   State<App> createState() => _AppState();
 }
 
-class _AppState extends State<App> with SingleTickerProviderStateMixin {
-  static const rowHeight = 40.0;
+class _AppState extends State<App> {
+  final _mediaController = MediaController();
 
-  late final List<Widget> _tabs;
-
-  late int currentPage;
-  late TabController tabController;
-
-  final controller = MediaController();
+  late final PersistentTabController _controller;
 
   @override
   void initState() {
     super.initState();
+    _controller = PersistentTabController(initialIndex: 0);
+  }
 
-    _tabs = [
-      HomeView(
-        key: Key('home'),
-        controller: controller,
+  List<Widget> _buildScreens() => [
+        HomeView(controller: _mediaController),
+        DownloadsView(controller: _mediaController),
+      ];
+
+  List<PersistentBottomNavBarItem> _navBarsItems() {
+    return [
+      PersistentBottomNavBarItem(
+        icon: Icon(Icons.home),
+        title: ("Home"),
+        activeColorPrimary: CupertinoColors.activeBlue,
+        inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
-      DownloadsView(
-        key: Key('downloads'),
-        controller: controller,
+      PersistentBottomNavBarItem(
+        icon: Icon(Icons.subscriptions_rounded),
+        title: ("Downloads"),
+        activeColorPrimary: CupertinoColors.destructiveRed,
+        inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
     ];
-
-    // From package docs
-    currentPage = 0;
-    tabController = TabController(length: 2, vsync: this);
-    tabController.animation?.addListener(
-      () {
-        final value = tabController.animation!.value.round();
-        if (value != currentPage && mounted) {
-          changePage(value);
-        }
-      },
-    );
   }
-
-  void changePage(int newPage) {
-    setState(() {
-      currentPage = newPage;
-    });
-  }
-
-  Widget _buildIconTab({
-    required IconData icon,
-    required int index,
-  }) =>
-      Container(
-        margin: const EdgeInsets.symmetric(vertical: 8),
-        height: rowHeight,
-        width: double.infinity,
-        decoration: ShapeDecoration(
-          color: currentPage == index ? Colors.red : Colors.transparent,
-          shape: const StadiumBorder(),
-        ),
-        child: Center(child: Icon(icon, color: Colors.blue)),
-      );
 
   @override
   Widget build(BuildContext context) {
-    final tabbar = TabBar(
-      indicatorColor: Colors.transparent,
-      enableFeedback: false,
-      splashBorderRadius: BorderRadius.circular(borderRadius),
-      controller: tabController,
-      tabs: [
-        _buildIconTab(icon: Icons.home_rounded, index: 0),
-        _buildIconTab(icon: Icons.subscriptions_rounded, index: 1),
-      ],
-    );
-
-    final bottomBar = BottomBar(
-      borderRadius: BorderRadius.circular(borderRadius),
-      barColor: Colors.white,
-      body: (_, controller) => TabBarView(
-        controller: tabController,
-        children: _tabs,
+    return PersistentTabView(
+      context,
+      controller: _controller,
+      screens: _buildScreens(),
+      items: _navBarsItems(),
+      confineInSafeArea: true,
+      backgroundColor: Colors.white, // Default is Colors.white.
+      handleAndroidBackButtonPress: true, // Default is true.
+      resizeToAvoidBottomInset:
+          true, // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
+      stateManagement: true, // Default is true.
+      hideNavigationBarWhenKeyboardShows:
+          true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
+      decoration: NavBarDecoration(
+        borderRadius: BorderRadius.circular(10.0),
+        colorBehindNavBar: Colors.white,
       ),
-      child: tabbar,
-    );
-
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: bottomBar,
+      popAllScreensOnTapOfSelectedTab: true,
+      popActionScreens: PopActionScreensType.all,
+      itemAnimationProperties: ItemAnimationProperties(
+        // Navigation Bar's items animation properties.
+        duration: Duration(milliseconds: 200),
+        curve: Curves.ease,
       ),
+      screenTransitionAnimation: ScreenTransitionAnimation(
+        // Screen transition animation on change of selected tab.
+        animateTabTransition: true,
+        curve: Curves.ease,
+        duration: Duration(milliseconds: 200),
+      ),
+      navBarStyle: NavBarStyle.style1,
     );
   }
 }

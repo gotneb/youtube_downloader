@@ -26,6 +26,7 @@ dependencies:
   loading_animations: ^2.2.0
   flutter_floating_bottom_bar: ^1.2.0
   get: ^4.6.6
+  persistent_bottom_nav_bar: ^5.0.2
 
 flutter_icons:
   image_path: "assets/icon/icon.png"

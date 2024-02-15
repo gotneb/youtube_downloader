@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:youtube_downloader/components/card_download.dart';
+import 'package:youtube_downloader/constants.dart';
 import 'package:youtube_downloader/models/media_controller.dart';
 
 class DownloadsView extends StatelessWidget {
@@ -11,6 +12,7 @@ class DownloadsView extends StatelessWidget {
   final MediaController controller;
 
   Widget _buildBody() {
+    logger.i('Building body...Controler has ${controller.medias.length}');
     return ListView.builder(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       itemCount: controller.medias.length,
